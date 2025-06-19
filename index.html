@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Will Napolini - Digital Creator Portfolio">
+    <meta name="keywords" content="Will Napolini, Digital Creator, Mindset, Skillset, Toolset">
+    <title>Will Napolini - Digital Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Markdown Support Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+    
+    <!-- PDF.js for PDF preview -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <!-- YouTube iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-gentle': 'bounce-gentle 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        },
+                        'bounce-gentle': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-3px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background 0.5s ease;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        
+        .app-content {
+            width: 100%;
+            max-width: 375px;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .social-icon {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-img {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .theme-btn:hover .theme-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .theme-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .chat-bot {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-bot:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-bot:hover .chat-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        .chat-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .theme-btn, .chat-bot {
+            flex-shrink: 0;
+        }
+        
+        /* Chat Window */
+        .chat-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            height: 500px;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            border-radius: 24px;
+        }
+
+        .chat-window.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+            overflow: hidden;
+            padding: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-avatar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: white;
+        }
+
+        .chat-info p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 4px;
+            color: white;
+        }
+
+        .message.user .message-content {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Message Actions */
+        .message-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .message-actions button {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: inherit;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .message-actions button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message-actions button i {
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .message.user .message-actions button {
+            color: rgba(51, 51, 51, 0.8);
+        }
+
+        .message.user .message-actions button:hover {
+            color: #333;
+        }
+
+        /* Media preview styles */
+        .video-player {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .video-player iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .audio-player {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        /* Markdown Styling */
+        .message-content a {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+        .message-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .message-content img:hover {
+            transform: scale(1.02);
+        }
+
+        .message-content pre {
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+            margin: 8px 0;
+        }
+
+        .message-content code {
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 90%;
+        }
+
+        .message-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .message-content blockquote {
+            border-left: 3px solid #ccc;
+            padding-left: 12px;
+            margin: 8px 0;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .message-content ul, 
+        .message-content ol {
+            padding-left: 24px;
+            margin: 8px 0;
+        }
+
+        .message-content ul {
+            list-style-type: disc;
+        }
+
+        .message-content ol {
+            list-style-type: decimal;
+        }
+
+        .message-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 8px 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .message-content th, 
+        .message-content td {
+            border: 1px solid #444;
+            padding: 8px;
+        }
+
+        .message-content th {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .message-content tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .message-content .katex {
+            font-size: 1.1em;
+        }
+
+        .message-content .spoiler {
+            background: #333;
+            color: #333;
+            cursor: pointer;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+
+        .message-content .spoiler:hover {
+            color: white;
+        }
+
+        .message-content .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message-content .alert i {
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+
+        .message-content .alert-note {
+            background: rgba(59, 130, 246, 0.2);
+            border-left: 3px solid rgb(59, 130, 246);
+        }
+
+        .message-content .alert-warning {
+            background: rgba(234, 179, 8, 0.2);
+            border-left: 3px solid rgb(234, 179, 8);
+        }
+
+        .message-content .alert-tip {
+            background: rgba(34, 197, 94, 0.2);
+            border-left: 3px solid rgb(34, 197, 94);
+        }
+
+        .message-content .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid rgb(239, 68, 68);
+        }
+
+        .message-content .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .message-content pre:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .message-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            padding: 1px;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .message.bot .message-avatar {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 1px;
+        }
+
+        .message.user .message-avatar {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            max-width: 70%;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: typingPulse 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Chat Input */
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .chat-input-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .chat-input input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-input input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .file-input-label {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.2s;
+        }
+
+        .file-input-label:hover {
+            color: white;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .send-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .send-button:hover::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        /* Close Button */
+        .chat-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Error Message */
+        .message.error .message-content {
+            background: rgba(255, 0, 0, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-content img, 
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .lightbox-title {
+            color: white;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* PDF Viewer */
+        .pdf-viewer {
+            width: 80vw;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .pdf-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pdf-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pdf-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Audio Player */
+        .audio-player {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        /* Video Player */
+        .video-player {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* File Preview */
+        .file-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            max-width: 100%;
+        }
+
+        .file-preview-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .file-preview-name {
+            word-break: break-all;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .file-preview-size {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .file-preview-download {
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .file-preview-download:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .toast.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Animations */
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typingPulse {
+            0%, 60%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            30% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                justify-content: flex-start;
+            }
+            
+            .app-content {
+                padding-top: 5px;
+            }
+            
+            .chat-window {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                max-height: 500px;
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+            }
+            
+            .flex.gap-4 {
+                gap: 0.75rem;
+            }
+            
+            .chat-bot {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .theme-btn {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .video-player iframe {
+                height: 180px;
+            }
+
+            .message-actions {
+                opacity: 1; /* Always show actions on mobile */
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-500 via-red-500 to-yellow-600 transition-colors duration-500">
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <div class="lightbox-content" id="lightboxContent"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- App Content -->
+    <div class="app-content">
+        <!-- Profile Card -->
+        <div class="glass-card rounded-2xl p-6 mb-4 shadow-xl transform transition-all duration-300 hover:shadow-2xl">
+            <div class="flex justify-center mb-6">
+                <img src="https://avatars.githubusercontent.com/u/192521042?v=4" alt="Will Napolini" 
+                     class="w-24 h-24 rounded-full object-cover border-3 border-white/30 profile-img animate-float" loading="lazy">
+            </div>
+            
+            <h1 class="text-2xl font-bold text-center text-white mb-2">Will Napolini</h1>
+            <p class="text-center text-white/80 mb-6 text-sm" data-key="tagline">Mindset • Skillset • Toolset</p>
+            
+            <div class="flex justify-center mb-6">
+                <button id="languageSelector" class="glass-card px-4 py-2 rounded-full text-white flex items-center space-x-2 transition-all hover:bg-white/20 text-sm" aria-label="Change language">
+                    <span>🇺🇸</span>
+                    <span>English</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-3 mb-6">
+                <a href="https://t.me/willnapolini" class="social-icon bg-white/10 rounded-xl p-4 flex items-center justify-center text-white text-xl" aria-label="Telegram">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://twitter.com/willnapolini" class="social-icon bg-white/10 rounded-xl p-4 flex items-center justify-center text-white text-xl" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com/willnapolini" class="social-icon bg-white/10 rounded-xl p-4 flex items-center justify-center text-white text-xl" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://open.spotify.com/user/willnapolini" class="social-icon bg-white/10 rounded-xl p-4 flex items-center justify-center text-white text-xl" aria-label="Spotify">
+                    <i class="fab fa-spotify"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-3 mb-6">
+            <a href="https://willnapolini.com/blog" class="action-btn glass-card rounded-xl p-4 flex items-center space-x-4 text-white" data-section="blog">
+                <div class="bg-white/20 w-12 h-12 rounded-lg flex items-center justify-center text-xl">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base" data-key="blog_title">Blog</h3>
+                    <p class="text-sm text-white/70" data-key="blog_subtitle">Read my posts</p>
+                </div>
+                <div class="opacity-70">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </a>
+            
+            <a href="https://willnapolini.com/shop" class="action-btn glass-card rounded-xl p-4 flex items-center space-x-4 text-white" data-section="shop">
+                <div class="bg-white/20 w-12 h-12 rounded-lg flex items-center justify-center text-xl">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base" data-key="shop_title">Shop</h3>
+                    <p class="text-sm text-white/70" data-key="shop_subtitle">Browse my products</p>
+                </div>
+                <div class="opacity-70">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </a>
+            
+            <a href="https://willnapolini.com/contact" class="action-btn glass-card rounded-xl p-4 flex items-center space-x-4 text-white" data-section="contact">
+                <div class="bg-white/20 w-12 h-12 rounded-lg flex items-center justify-center text-xl">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base" data-key="contact_title">Contact</h3>
+                    <p class="text-sm text-white/70" data-key="contact_subtitle">Get in touch</p>
+                </div>
+                <div class="opacity-70">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Theme Switcher and Chat Bot -->
+        <div class="flex justify-center items-center gap-4 mb-6">
+            <button id="themeSwitcher" class="theme-btn glass-card px-6 py-3 rounded-full text-white flex items-center space-x-3 transition-all hover:bg-white/20 text-sm" aria-label="Change theme">
+                <div class="theme-icon w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-yellow-600"></div>
+                <span data-key="theme_name">Blazing Suns</span>
+            </button>
+            <button id="chatBot" class="chat-bot glass-card w-12 h-12 rounded-full text-white flex items-center justify-center transition-all hover:bg-white/20 text-lg animate-bounce-gentle" aria-label="Open chat">
+                <div class="chat-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+            </button>
+        </div>
+        
+        <!-- Chat Window -->
+        <div class="chat-window glass-card" id="chatWindow" role="dialog" aria-label="Chat with Will Napolini">
+            <button class="chat-close" id="chatClose" aria-label="Close chat" tabindex="0">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <img src="https://avatars.githubusercontent.com/u/192521042?v=4" alt="Will Napolini" loading="lazy" />
+                </div>
+                <div class="chat-info">
+                    <h4 data-key="ai_assistant">Will Napolini</h4>
+                    <p data-key="online_status">Online • Always here to help</p>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages" aria-live="polite">
+                <div class="message bot">
+                    <div class="message-avatar">
+                        <img src="https://avatars.githubusercontent.com/u/192521042?v=4" alt="Will Napolini" loading="lazy" />
+                    </div>
+                    <div class="message-content" data-key="welcome_message">
+                        Hi there! 👋 I'm Will, this chat with full markdown and file support. You can:
+                        - Send **text messages** with markdown
+                        - Upload images (JPG, PNG, GIF)
+                        - Share videos (MP4, WEBM)
+                        - Send audio files (MP3, WAV)
+                        - Upload PDF documents
+                        - Share YouTube links
+                        - And more!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <div class="chat-input-container">
+                    <input type="text" id="messageInput" data-key-placeholder="type_message" placeholder="Type your message..." aria-label="Type your message" />
+                    <label for="fileInput" class="file-input-label" title="Attach file">
+                        <i class="fas fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*,video/*,audio/*,.pdf" multiple />
+                </div>
+                <button class="send-button" id="sendButton" aria-label="Send message">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22,2 15,22 11,13 2,9 22,2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Markdown Support Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.3.0/dist/mermaid.min.js"></script>
+
+    <script>
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+
+        // Language data
+        const languages = {
+            en: {
+                flag: '🇺🇸',
+                name: 'English',
+                translations: {
+                    tagline: 'Mindset • Skillset • Toolset',
+                    blog_title: 'Blog',
+                    blog_subtitle: 'Read my posts',
+                    shop_title: 'Shop',
+                    shop_subtitle: 'Browse my products',
+                    contact_title: 'Contact',
+                    contact_subtitle: 'Get in touch',
+                    theme_name: 'Blazing Suns',
+                    chat_bot: 'Chat with AI',
+                    ai_assistant: 'Will Napolini',
+                    online_status: 'Online • Always here to help',
+                    welcome_message: 'Hi there! 👋 I\'m your Will Napolini with full markdown and file support. You can:\n- Send **text messages** with markdown\n- Upload images (JPG, PNG, GIF)\n- Share videos (MP4, WEBM)\n- Send audio files (MP3, WAV)\n- Upload PDF documents\n- Share YouTube links\n- And more!',
+                    type_message: 'Type your message...',
+                    file_uploaded: 'File uploaded:',
+                    pdf_page: 'Page',
+                    of: 'of',
+                    copy_message: 'Copy',
+                    edit_message: 'Edit',
+                    delete_message: 'Delete',
+                    message_copied: 'Message copied!',
+                    message_deleted: 'Message deleted'
+                },
+                links: {
+                    blog: 'https://willnapolini.com/blog',
+                    shop: 'https://willnapolini.com/shop',
+                    contact: 'https://willnapolini.com/contact'
+                }
+            },
+            ru: {
+                flag: '🇷🇺',
+                name: 'Русский',
+                translations: {
+                    tagline: 'Мышление • Навыки • Инструменты',
+                    blog_title: 'Блог',
+                    blog_subtitle: 'Читайте мои посты',
+                    shop_title: 'Магазин',
+                    shop_subtitle: 'Просмотрите товары',
+                    contact_title: 'Контакты',
+                    contact_subtitle: 'Свяжитесь со мной',
+                    theme_name: 'Пылающие солнца',
+                    chat_bot: 'Чат с ИИ',
+                    ai_assistant: 'ИИ Ассистент',
+                    online_status: 'Онлайн • Всегда готов помочь',
+                    welcome_message: 'Привет! 👋 Я ваш ИИ-ассистент с поддержкой markdown и файлов. Вы можете:\n- Отправлять **текстовые сообщения** с markdown\n- Загружать изображения (JPG, PNG, GIF)\n- Делиться видео (MP4, WEBM)\n- Отправлять аудиофайлы (MP3, WAV)\n- Загружать PDF документы\n- Делиться ссылками на YouTube\n- И многое другое!',
+                    type_message: 'Введите сообщение...',
+                    file_uploaded: 'Файл загружен:',
+                    pdf_page: 'Страница',
+                    of: 'из',
+                    copy_message: 'Копировать',
+                    edit_message: 'Редактировать',
+                    delete_message: 'Удалить',
+                    message_copied: 'Сообщение скопировано!',
+                    message_deleted: 'Сообщение удалено'
+                },
+                links: {
+                    blog: 'https://willnapolini.ru/blog',
+                    shop: 'https://willnapolini.ru/shop',
+                    contact: 'https://willnapolini.ru/contact'
+                }
+            },
+            es: {
+                flag: '🇪🇸',
+                name: 'Español',
+                translations: {
+                    tagline: 'Mentalidad • Habilidades • Herramientas',
+                    blog_title: 'Blog',
+                    blog_subtitle: 'Lee mis posts',
+                    shop_title: 'Tienda',
+                    shop_subtitle: 'Explora productos',
+                    contact_title: 'Contacto',
+                    contact_subtitle: 'Ponte en contacto',
+                    theme_name: 'Soles Ardientes',
+                    chat_bot: 'Chat con IA',
+                    ai_assistant: 'Asistente IA',
+                    online_status: 'En línea • Siempre aquí para ayudar',
+                    welcome_message: '¡Hola! 👋 Soy tu asistente de IA con soporte para markdown y archivos. Puedes:\n- Enviar **mensajes de texto** con markdown\n- Subir imágenes (JPG, PNG, GIF)\n- Compartir videos (MP4, WEBM)\n- Enviar archivos de audio (MP3, WAV)\n- Subir documentos PDF\n- Compartir enlaces de YouTube\n- ¡Y mucho más!',
+                    type_message: 'Escribe tu mensaje...',
+                    file_uploaded: 'Archivo subido:',
+                    pdf_page: 'Página',
+                    of: 'de',
+                    copy_message: 'Copiar',
+                    edit_message: 'Editar',
+                    delete_message: 'Eliminar',
+                    message_copied: '¡Mensaje copiado!',
+                    message_deleted: 'Mensaje eliminado'
+                },
+                links: {
+                    blog: 'https://willnapolini.es/blog',
+                    shop: 'https://willnapolini.es/shop',
+                    contact: 'https://willnapolini.es/contact'
+                }
+            },
+            fr: {
+                flag: '🇫🇷',
+                name: 'Français',
+                translations: {
+                    tagline: 'Mentalité • Compétences • Outils',
+                    blog_title: 'Blog',
+                    blog_subtitle: 'Lisez mes articles',
+                    shop_title: 'Boutique',
+                    shop_subtitle: 'Parcourez produits',
+                    contact_title: 'Contact',
+                    contact_subtitle: 'Contactez-moi',
+                    theme_name: 'Soleils Flamboyants',
+                    chat_bot: 'Chat avec IA',
+                    ai_assistant: 'Assistant IA',
+                    online_status: 'En ligne • Toujours là pour aider',
+                    welcome_message: 'Salut ! 👋 Je suis votre assistant IA avec prise en charge complète du markdown et des fichiers. Vous pouvez :\n- Envoyer des **messages texte** avec markdown\n- Télécharger des images (JPG, PNG, GIF)\n- Partager des vidéos (MP4, WEBM)\n- Envoyer des fichiers audio (MP3, WAV)\n- Télécharger des documents PDF\n- Partager des liens YouTube\n- Et plus encore !',
+                    type_message: 'Tapez votre message...',
+                    file_uploaded: 'Fichier téléchargé:',
+                    pdf_page: 'Page',
+                    of: 'sur',
+                    copy_message: 'Copier',
+                    edit_message: 'Modifier',
+                    delete_message: 'Supprimer',
+                    message_copied: 'Message copié!',
+                    message_deleted: 'Message supprimé'
+                },
+                links: {
+                    blog: 'https://willnapolini.fr/blog',
+                    shop: 'https://willnapolini.fr/shop',
+                    contact: 'https://willnapolini.fr/contact'
+                }
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'en';
+        const languageKeys = Object.keys(languages);
+        let currentLanguageIndex = languageKeys.indexOf(currentLanguage);
+
+        // Update content based on language
+        function updateContent() {
+            const lang = languages[currentLanguage];
+            
+            // Update language selector
+            const langSelector = document.getElementById('languageSelector');
+            langSelector.innerHTML = `
+                <span>${lang.flag}</span>
+                <span>${lang.name}</span>
+            `;
+            
+            // Update translations
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (lang.translations[key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.value = lang.translations[key];
+                    } else {
+                        element.textContent = lang.translations[key];
+                    }
+                }
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-key-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-key-placeholder');
+                if (lang.translations[key]) {
+                    element.placeholder = lang.translations[key];
+                }
+            });
+            
+            // Update button links
+            document.querySelectorAll('[data-section]').forEach(button => {
+                const section = button.getAttribute('data-section');
+                if (lang.links[section]) {
+                    button.href = lang.links[section];
+                }
+            });
+        }
+
+        // Language switcher
+        document.getElementById('languageSelector').addEventListener('click', function() {
+            currentLanguageIndex = (currentLanguageIndex + 1) % languageKeys.length;
+            currentLanguage = languageKeys[currentLanguageIndex];
+            localStorage.setItem('language', currentLanguage);
+            updateContent();
+            updateTheme();
+            
+            // Animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        // Theme switcher
+        const themes = [
+            { 
+                name: { 
+                    en: 'Blazing Suns', 
+                    ru: 'Пылающие солнца', 
+                    es: 'Soles Ardientes', 
+                    fr: 'Soleils Flamboyants' 
+                }, 
+                color: 'bg-gradient-to-r from-orange-500 to-yellow-600',
+                classes: 'bg-gradient-to-br from-orange-500 via-red-500 to-yellow-600'
+            },
+            { 
+                name: { 
+                    en: 'Ocean Breeze', 
+                    ru: 'Морской бриз', 
+                    es: 'Brisa Marina', 
+                    fr: 'Brise Marine' 
+                }, 
+                color: 'bg-gradient-to-r from-cyan-400 to-indigo-600',
+                classes: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600'
+            },
+            { 
+                name: { 
+                    en: 'Forest Green', 
+                    ru: 'Лесная зелень', 
+                    es: 'Verde Bosque', 
+                    fr: 'Vert Forêt' 
+                }, 
+                color: 'bg-gradient-to-r from-green-400 to-teal-600',
+                classes: 'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600'
+            },
+            { 
+                name: { 
+                    en: 'Night Mode', 
+                    ru: 'Ночной режим', 
+                    es: 'Modo Nocturno', 
+                    fr: 'Mode Nuit' 
+                }, 
+                color: 'bg-gradient-to-r from-gray-700 to-black',
+                classes: 'bg-gradient-to-br from-gray-700 via-gray-900 to-black'
+            },
+            { 
+                name: { 
+                    en: 'Purple Haze', 
+                    ru: 'Фиолетовый туман', 
+                    es: 'Niebla Púrpura', 
+                    fr: 'Brume Pourpre' 
+                }, 
+                color: 'bg-gradient-to-r from-purple-400 to-pink-600',
+                classes: 'bg-gradient-to-br from-purple-400 via-fuchsia-500 to-pink-600'
+            }
+        ];
+                
+        let currentThemeIndex = parseInt(localStorage.getItem('themeIndex') || '0', 10);
+        
+        function updateTheme() {
+            const currentTheme = themes[currentThemeIndex];
+            
+            // Update body background
+            document.body.className = `min-h-screen flex items-center justify-center ${currentTheme.classes} transition-colors duration-500`;
+            
+            // Update theme button
+            const themeSwitcher = document.getElementById('themeSwitcher');
+            const themeIcon = themeSwitcher.querySelector('.theme-icon');
+            themeIcon.className = `theme-icon w-4 h-4 rounded-full ${currentTheme.color}`;
+            const themeNameElement = themeSwitcher.querySelector('[data-key="theme_name"]');
+            themeNameElement.textContent = currentTheme.name[currentLanguage] || currentTheme.name.en;
+        }
+                
+        document.getElementById('themeSwitcher').addEventListener('click', function() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            localStorage.setItem('themeIndex', currentThemeIndex);
+            updateTheme();
+            
+            // Animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        // Chat bot functionality
+        const chatWindow = document.getElementById('chatWindow');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatClose = document.getElementById('chatClose');
+        const fileInput = document.getElementById('fileInput');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxContent = document.getElementById('lightboxContent');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const toast = document.getElementById('toast');
+        
+        document.getElementById('chatBot').addEventListener('click', function() {
+            chatWindow.classList.add('active');
+            messageInput.focus();
+            
+            // Animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+        
+        chatClose.addEventListener('click', function() {
+            chatWindow.classList.remove('active');
+        });
+        
+        lightboxClose.addEventListener('click', function() {
+            lightbox.classList.remove('active');
+        });
+        
+        // Close chat when clicking outside
+        document.addEventListener('click', function(event) {
+            if (chatWindow.classList.contains('active') && 
+                !chatWindow.contains(event.target) && 
+                !document.getElementById('chatBot').contains(event.target)) {
+                chatWindow.classList.remove('active');
+            }
+            
+            if (lightbox.classList.contains('active') && 
+                !lightboxContent.contains(event.target) && 
+                event.target !== lightboxClose) {
+                lightbox.classList.remove('active');
+            }
+        });
+        
+        // Enable keyboard navigation for close button
+        chatClose.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                chatWindow.classList.remove('active');
+            }
+        });
+
+        // Lightbox for media
+        function openLightbox(content, title = '') {
+            lightboxContent.innerHTML = '';
+            
+            if (content.tagName === 'IMG') {
+                const img = document.createElement('img');
+                img.src = content.src;
+                img.style.maxWidth = '90vw';
+                img.style.maxHeight = '90vh';
+                lightboxContent.appendChild(img);
+                
+                if (title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'lightbox-title';
+                    titleElement.textContent = title;
+                    lightboxContent.appendChild(titleElement);
+                }
+            } 
+            else if (content.tagName === 'VIDEO') {
+                const video = document.createElement('video');
+                video.src = content.src;
+                video.controls = true;
+                video.style.maxWidth = '90vw';
+                video.style.maxHeight = '90vh';
+                lightboxContent.appendChild(video);
+                
+                if (title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'lightbox-title';
+                    titleElement.textContent = title;
+                    lightboxContent.appendChild(titleElement);
+                }
+            } 
+            else if (content.tagName === 'AUDIO') {
+                const audio = document.createElement('audio');
+                audio.src = content.src;
+                audio.controls = true;
+                lightboxContent.appendChild(audio);
+                
+                if (title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'lightbox-title';
+                    titleElement.textContent = title;
+                    lightboxContent.appendChild(titleElement);
+                }
+            } 
+            else if (content.classList.contains('video-player')) {
+                // Handle YouTube iframes
+                const iframe = content.querySelector('iframe');
+                if (iframe) {
+                    const iframeClone = iframe.cloneNode(true);
+                    iframeClone.width = '800';
+                    iframeClone.height = '450';
+                    lightboxContent.appendChild(iframeClone);
+                    
+                    if (title) {
+                        const titleElement = document.createElement('div');
+                        titleElement.className = 'lightbox-title';
+                        titleElement.textContent = title;
+                        lightboxContent.appendChild(titleElement);
+                    }
+                } else {
+                    // Handle regular video elements
+                    const video = content.querySelector('video');
+                    if (video) {
+                        const videoClone = video.cloneNode(true);
+                        videoClone.style.maxWidth = '90vw';
+                        videoClone.style.maxHeight = '90vh';
+                        lightboxContent.appendChild(videoClone);
+                        
+                        if (title) {
+                            const titleElement = document.createElement('div');
+                            titleElement.className = 'lightbox-title';
+                            titleElement.textContent = title;
+                            lightboxContent.appendChild(titleElement);
+                        }
+                    }
+                }
+            }
+            else if (content.classList.contains('pdf-viewer')) {
+                const pdfViewer = content.cloneNode(true);
+                lightboxContent.appendChild(pdfViewer);
+                
+                if (title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'lightbox-title';
+                    titleElement.textContent = title;
+                    lightboxContent.appendChild(titleElement);
+                }
+            } else {
+                // For other content types (like file previews)
+                lightboxContent.appendChild(content.cloneNode(true));
+            }
+            
+            lightbox.classList.add('active');
+        }
+
+        // Toast notifications
+        function showToast(message, duration = 2000) {
+            toast.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, duration);
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Get file icon based on type
+        function getFileIcon(file) {
+            const type = file.type.split('/')[0];
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (type === 'image') return 'fa-file-image';
+            if (type === 'video') return 'fa-file-video';
+            if (type === 'audio') return 'fa-file-audio';
+            if (extension === 'pdf') return 'fa-file-pdf';
+            return 'fa-file';
+        }
+
+        // Create PDF viewer
+        async function createPdfViewer(file) {
+            const pdfViewer = document.createElement('div');
+            pdfViewer.className = 'pdf-viewer';
+            
+            const pdfCanvas = document.createElement('canvas');
+            pdfViewer.appendChild(pdfCanvas);
+            
+            const pdfControls = document.createElement('div');
+            pdfControls.className = 'pdf-controls';
+            
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.addEventListener('click', () => navigatePdf(pdfNumPages, currentPage - 1));
+            
+            const pageInfo = document.createElement('span');
+            pageInfo.className = 'text-white';
+            
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.addEventListener('click', () => navigatePdf(pdfNumPages, currentPage + 1));
+            
+            pdfControls.appendChild(prevButton);
+            pdfControls.appendChild(pageInfo);
+            pdfControls.appendChild(nextButton);
+            
+            pdfViewer.appendChild(pdfControls);
+            
+            let pdfDoc = null;
+            let currentPage = 1;
+            let pdfNumPages = 0;
+            
+            // Load PDF document
+            const arrayBuffer = await file.arrayBuffer();
+            pdfDoc = await pdfjsLib.getDocument(arrayBuffer).promise;
+            pdfNumPages = pdfDoc.numPages;
+            
+            // Render first page
+            await renderPage(pdfDoc, currentPage, pdfCanvas, pageInfo);
+            
+            // Navigation function
+            async function navigatePdf(totalPages, newPage) {
+                if (newPage < 1 || newPage > totalPages) return;
+                currentPage = newPage;
+                await renderPage(pdfDoc, currentPage, pdfCanvas, pageInfo);
+            }
+            
+            return pdfViewer;
+        }
+        
+        // Render PDF page
+        async function renderPage(pdfDoc, pageNum, canvas, pageInfo) {
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.5 });
+            
+            // Prepare canvas
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            // Render PDF page into canvas context
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            
+            await page.render(renderContext).promise;
+            
+            // Update page info
+            const lang = languages[currentLanguage];
+            pageInfo.textContent = `${lang.translations.pdf_page || 'Page'} ${pageNum} ${lang.translations.of || 'of'} ${pdfDoc.numPages}`;
+        }
+
+        // Create file preview element
+        function createFilePreview(file, url) {
+            const preview = document.createElement('div');
+            preview.className = 'file-preview';
+            
+            const icon = document.createElement('i');
+            icon.className = `file-preview-icon fas ${getFileIcon(file)}`;
+            
+            const name = document.createElement('div');
+            name.className = 'file-preview-name';
+            name.textContent = file.name;
+            
+            const size = document.createElement('div');
+            size.className = 'file-preview-size';
+            size.textContent = formatFileSize(file.size);
+            
+            const download = document.createElement('a');
+            download.className = 'file-preview-download';
+            download.href = url;
+            download.download = file.name;
+            download.innerHTML = '<i class="fas fa-download"></i> Download';
+            
+            preview.appendChild(icon);
+            preview.appendChild(name);
+            preview.appendChild(size);
+            preview.appendChild(download);
+            
+            // Add click handler for opening in lightbox if it's an image, video, audio or PDF
+            const fileType = file.type.split('/')[0];
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (fileType === 'image') {
+                preview.style.cursor = 'pointer';
+                preview.addEventListener('click', () => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    openLightbox(img, file.name);
+                });
+            } else if (fileType === 'video') {
+                preview.style.cursor = 'pointer';
+                preview.addEventListener('click', async () => {
+                    const video = document.createElement('video');
+                    video.src = url;
+                    video.controls = true;
+                    openLightbox(video, file.name);
+                });
+            } else if (fileType === 'audio') {
+                preview.style.cursor = 'pointer';
+                preview.addEventListener('click', async () => {
+                    const audio = document.createElement('audio');
+                    audio.src = url;
+                    audio.controls = true;
+                    openLightbox(audio, file.name);
+                });
+            } else if (extension === 'pdf') {
+                preview.style.cursor = 'pointer';
+                preview.addEventListener('click', async () => {
+                    const pdfViewer = await createPdfViewer(file);
+                    openLightbox(pdfViewer, file.name);
+                });
+            }
+            
+            return preview;
+        }
+
+        // Handle file uploads
+        fileInput.addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            
+            for (const file of files) {
+                const url = URL.createObjectURL(file);
+                const lang = languages[currentLanguage];
+                
+                // Create a message for the uploaded file
+                addMessage(`${lang.translations.file_uploaded || 'File uploaded:'} ${file.name}`, true);
+                
+                // Create and append the file preview
+                const preview = createFilePreview(file, url);
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.innerHTML = '<img src="https://avatars.githubusercontent.com/u/192521042?v=4" alt="User" loading="lazy" />';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                messageContent.appendChild(preview);
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(messageContent);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate AI response for files
+                setTimeout(() => {
+                    showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        
+                        let response = '';
+                        const fileType = file.type.split('/')[0];
+                        const extension = file.name.split('.').pop().toLowerCase();
+                        
+                        if (fileType === 'image') {
+                            response = `Thanks for sharing this image! I can see it's a ${file.type.split('/')[1].toUpperCase()} file.`;
+                        } else if (fileType === 'video') {
+                            response = `Thanks for sharing this video! It's a ${file.type.split('/')[1].toUpperCase()} file.`;
+                        } else if (fileType === 'audio') {
+                            response = `Thanks for sharing this audio file! I'll take a listen.`;
+                        } else if (extension === 'pdf') {
+                            response = `Thanks for sharing this PDF document! I can see it's titled "${file.name.replace('.pdf', '')}".`;
+                        } else {
+                            response = `Thanks for sharing this file! It's a ${file.type || extension} file.`;
+                        }
+                        
+                        addMessage(response);
+                    }, 1500);
+                }, 500);
+            }
+            
+            // Reset file input
+            fileInput.value = '';
+        });
+
+        // Markdown parsing
+        function parseMarkdown(text) {
+            if (!text) return '';
+            
+            // YouTube links
+            text = text.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g,
+                '<div class="video-player"><iframe width="100%" height="200" src="https://www.youtube.com/embed/$1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>');
+            
+            // Online video links (mp4, webm)
+            text = text.replace(/(https?:\/\/.*\.(?:mp4|webm|mov))/gi,
+                '<div class="video-player"><video controls src="$1" class="w-full rounded-lg"></video></div>');
+            
+            // Online image links
+            text = text.replace(/(https?:\/\/.*\.(?:jpg|jpeg|png|gif|webp))/gi,
+                '<img src="$1" alt="Online image" loading="lazy" class="rounded-lg max-w-full my-2 cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox(this)"/>');
+            
+            // Online audio links
+            text = text.replace(/(https?:\/\/.*\.(?:mp3|wav|ogg))/gi,
+                '<div class="audio-player"><audio controls src="$1" class="w-full"></audio></div>');
+            
+            // Headers
+            text = text.replace(/^# (.*$)/gm, '<h1 class="text-xl font-bold my-2">$1</h1>');
+            text = text.replace(/^## (.*$)/gm, '<h2 class="text-lg font-bold my-2">$1</h2>');
+            text = text.replace(/^### (.*$)/gm, '<h3 class="text-base font-bold my-2">$1</h3>');
+            
+            // Bold and Italic
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            text = text.replace(/\_\_(.*?)\_\_/g, '<u>$1</u>');
+            
+            // Links
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, 
+                '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-300 hover:underline">$1 <i class="fas fa-external-link-alt text-xs"></i></a>');
+            
+            // Images (markdown format)
+            text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, 
+                '<img src="$2" alt="$1" loading="lazy" class="rounded-lg max-w-full my-2 cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox(this)"/>');
+            
+            // Code blocks
+            text = text.replace(/```(\w*)\n([\s\S]*?)\n```/g, 
+                function(match, lang, code) {
+                    const langClass = lang ? `language-${lang}` : '';
+                    return `<pre class="relative my-3 rounded-lg bg-gray-800 p-3 overflow-x-auto"><button class="copy-btn" onclick="copyCode(this)">Copy</button><code class="${langClass}">${escapeHtml(code)}</code></pre>`;
+                });
+            
+            // Inline code
+            text = text.replace(/`([^`]+)`/g, '<code class="bg-gray-700 px-1 py-0.5 rounded">$1</code>');
+            
+            // Blockquotes
+            text = text.replace(/^>\s(.+)$/gm, '<blockquote class="border-l-4 border-gray-400 pl-4 italic my-2">$1</blockquote>');
+            
+            // Lists
+            text = text.replace(/^(\s*)\d+\.\s(.+)$/gm, '<ol class="list-decimal pl-6 my-2">$1<li>$2</li></ol>');
+            text = text.replace(/^(\s*)[-*+]\s(.+)$/gm, '<ul class="list-disc pl-6 my-2">$1<li>$2</li></ul>');
+            
+            // Horizontal rule
+            text = text.replace(/^---$/gm, '<hr class="my-4 border-gray-400">');
+            
+            // Tables
+            text = parseTables(text);
+            
+            // Strikethrough
+            text = text.replace(/~~(.+?)~~/g, '<del class="text-gray-400">$1</del>');
+            
+            // Superscript and subscript
+            text = text.replace(/\^\^(.+?)\^\^/g, '<sup>$1</sup>');
+            text = text.replace(/~~(.+?)~~/g, '<sub>$1</sub>');
+            
+            // Alerts
+            text = text.replace(/\[!(NOTE|WARNING|TIP|ERROR)\]\s(.+?)(?=\n|$)/g, 
+                function(match, type, content) {
+                    return `<div class="alert alert-${type.toLowerCase()} my-2 p-3 rounded-lg border-l-4 flex items-start">
+                        <i class="fas fa-${type === 'NOTE' ? 'info-circle' : 
+                                          type === 'WARNING' ? 'exclamation-triangle' : 
+                                          type === 'TIP' ? 'lightbulb' : 'times-circle'} mr-2 mt-0.5"></i>
+                        <div>${content}</div>
+                    </div>`;
+                });
+            
+            // Spoilers
+            text = text.replace(/\|\|(.+?)\|\|/g, 
+                '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
+            
+            // Emojis
+            text = text.replace(/:([a-z0-9_+-]+):/g, '<span class="emoji">$1</span>');
+            
+            return text;
+        }
+
+        function parseTables(text) {
+            return text.replace(/(\|.+\|[\r\n])((?:\|[-:]+\|[\r\n])*)((?:\|.+\|[\r\n])*)/g, 
+                function(match, header, divider, rows) {
+                    const alignments = divider.split('\n')[0].split('|').slice(1,-1).map(col => {
+                        if (col.startsWith(':') && col.endsWith(':')) return 'center';
+                        if (col.endsWith(':')) return 'right';
+                        return 'left';
+                    });
+                    
+                    let html = '<div class="overflow-x-auto my-3"><table class="w-full border-collapse">';
+                    
+                    // Header
+                    html += '<thead><tr>' + header.split('|').slice(1,-1).map((cell, i) => 
+                        `<th class="px-4 py-2 border bg-gray-100 dark:bg-gray-700 text-${alignments[i]}">${cell.trim()}</th>`).join('') + '</tr></thead>';
+                    
+                    // Rows
+                    html += '<tbody>' + rows.split('\n').filter(r => r.trim()).map(row => 
+                        '<tr>' + row.split('|').slice(1,-1).map((cell, i) => 
+                            `<td class="px-4 py-2 border text-${alignments[i]}">${cell.trim()}</td>`).join('') + '</tr>').join('');
+                    
+                    html += '</tbody></table></div>';
+                    return html;
+                });
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function copyCode(button) {
+            const code = button.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Code copied!');
+            }).catch(err => {
+                console.error('Failed to copy code: ', err);
+                showToast('Failed to copy code');
+            });
+        }
+
+        // API Configuration for chatbot
+        const API_KEY = "YOUR_API_KEY_HERE";
+        const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+        const MODEL = "deepseek/deepseek-chat:free";
+
+        // Conversation history
+        let conversationHistory = [
+            {
+                role: "system",
+                content: "You are a helpful Will Napolini. Be friendly, concise, and helpful. Support markdown formatting in your responses including tables, lists, code blocks, and other formatting as needed. Users can upload images, videos, audio files, and PDFs which you should acknowledge appropriately."
+            }
+        ];
+
+        function addMessage(text, isUser = false, isError = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user' : 'bot'} ${isError ? 'error' : ''}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    
+    // Use different avatar for user and bot
+    if (isUser) {
+        // Use a generic user icon or a different image for user messages
+        avatar.innerHTML = '<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs4hIcGvWU3aJOMGXm2QYbPIIb7ZgbftxQCA&s" alt="User Avatar" loading="lazy" />';
+    } else {
+        // Bot avatar remains the same
+        avatar.innerHTML = '<img src="https://avatars.githubusercontent.com/u/192521042?v=4" alt="Bot Avatar" loading="lazy" />';
+    }
+    
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    messageContent.innerHTML = parseMarkdown(text);
+    
+    // Add message actions
+    const messageActions = document.createElement('div');
+    messageActions.className = 'message-actions';
+    
+    const lang = languages[currentLanguage];
+    
+    // Copy button
+    const copyButton = document.createElement('button');
+    copyButton.innerHTML = `<i class="fas fa-copy"></i> ${lang.translations.copy_message || 'Copy'}`;
+    copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(lang.translations.message_copied || 'Message copied!');
+        });
+    });
+    
+    messageActions.appendChild(copyButton);
+    
+    // Edit button (only for user messages)
+    if (isUser) {
+        const editButton = document.createElement('button');
+        editButton.innerHTML = `<i class="fas fa-edit"></i> ${lang.translations.edit_message || 'Edit'}`;
+        editButton.addEventListener('click', () => {
+            messageInput.value = text;
+            messageInput.focus();
+            // Remove this message from conversation history
+            conversationHistory = conversationHistory.filter(msg => msg.content !== text);
+            // Remove the message from UI
+            messageDiv.remove();
+        });
+        messageActions.appendChild(editButton);
+    }
+    
+    // Delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = `<i class="fas fa-trash"></i> ${lang.translations.delete_message || 'Delete'}`;
+    deleteButton.addEventListener('click', () => {
+        // Remove this message from conversation history
+        conversationHistory = conversationHistory.filter(msg => msg.content !== text);
+        // Remove the message from UI
+        messageDiv.remove();
+        showToast(lang.translations.message_deleted || 'Message deleted');
+    });
+    messageActions.appendChild(deleteButton);
+    
+    messageContent.appendChild(messageActions);
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(messageContent);
+    
+    chatMessages.appendChild(messageDiv);
+    
+    // Render dynamic content after adding
+    setTimeout(() => {
+        renderMath();
+        renderDiagrams();
+        Prism.highlightAll();
+    }, 50);
+    
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Return the message div for reference
+    return messageDiv;
+}
+        
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            `;
+            
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return typingDiv;
+        }
+        
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        async function getAIResponse(userMessage) {
+            // Add user message to history
+            conversationHistory.push({
+                role: "user",
+                content: userMessage
+            });
+
+            showTypingIndicator();
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "HTTP-Referer": window.location.href,
+                        "X-Title": "AI Chatbot",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: MODEL,
+                        messages: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiMessage = data.choices[0].message.content;
+
+                // Add AI response to history
+                conversationHistory.push({
+                    role: "assistant",
+                    content: aiMessage
+                });
+
+                hideTypingIndicator();
+                addMessage(aiMessage);
+            } catch (error) {
+                hideTypingIndicator();
+                console.error("Error fetching AI response:", error);
+                addMessage("Sorry, I encountered an error. Please try again.", false, true);
+            } finally {
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        function handleUserInput() {
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                getAIResponse(message);
+                messageInput.value = '';
+            }
+        }
+
+        // Math rendering
+        function renderMath() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        // Mermaid diagrams
+        function renderDiagrams() {
+            mermaid.initialize({ 
+                startOnLoad: false,
+                theme: 'dark',
+                flowchart: { useMaxWidth: true }
+            });
+            mermaid.init(undefined, '.mermaid');
+        }
+
+        // Event Listeners for chat
+        sendButton.addEventListener('click', handleUserInput);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleUserInput();
+        });
+
+        // Initialize
+        updateContent();
+        updateTheme();
+        
+        // Add hover animation to action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('div:first-child');
+                icon.classList.add('animate-pulse');
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('div:first-child');
+                icon.classList.remove('animate-pulse');
+            });
+        });
+
+        // Expose functions to global scope for HTML onclick
+        window.openLightbox = openLightbox;
+        window.copyCode = copyCode;
+    </script>
+</body>
+</html>
