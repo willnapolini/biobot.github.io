@@ -1,6 +1,6 @@
 # Will Napolini - Digital Creator Portfolio
 
-![LinkBio Preview](https://github.com/willnapolini/linkbio/blob/main/assets/LinkBio%20Preview.png?raw=true)
+![LinkBio Preview](https://github.com/willnapolini/biobot.github.io/blob/main/assets/ui.cover.png?raw=true)
 
 A modern, interactive portfolio website for digital creator Will Napolini featuring a responsive design, theme customization, multilingual support, and an AI-powered chatbot.
 
